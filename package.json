@@ -24,6 +24,7 @@
     "README.md",
     "SECURITY.md",
     "CHANGELOG.md",
+    "docs",
     "LICENSE"
   ],
   "dsh": {
@@ -47,6 +48,7 @@
     "pack:check": "node scripts/pack-dry-run.mjs",
     "check:generated": "git diff --exit-code -- lib",
     "verify:browser": "node scripts/verify-browser.mjs",
+    "verify:dsh-alpha1": "node scripts/verify-dsh-alpha1.mjs",
     "test": "vitest run",
     "check": "npm run build && npm run check:generated && npm test && npm run pack:check"
   },

@@ -120,6 +120,14 @@ npm pack --dry-run
 
 Tests cover Session fencing, staged I/O cleanup, local preview, hidden live capture, request policies, controller disposal, runtime resolution, bundle isolation and transient Client registration.
 
+With an official DSH Alpha1 source checkout already built:
+
+```powershell
+npm run verify:dsh-alpha1 -- --source E:\path\to\deepseek-harness
+```
+
+This starts no model request. It composes the official Alpha1 `ToolRuntime` and `dsh-mcp-client` with this plugin, drives the pinned Playwright MCP against the installed system browser, verifies a hidden frame and a Session-fenced screenshot, then removes its project-local fixture.
+
 ## License
 
 MIT. Microsoft Playwright MCP remains separately licensed under Apache-2.0.
