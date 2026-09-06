@@ -297,23 +297,44 @@ window.__ModuleLoader__.load({
         "aria-pressed": open,
         onClick: toggle,
         style: {
-          display: "inline-flex",
+          display: "grid",
+          placeItems: "center",
           alignItems: "center",
-          gap: "6px",
+          width: "34px",
           height: "34px",
-          padding: "0 11px",
-          border: "1px solid var(--dsw-alias-border-l2, rgba(128,128,128,0.25))",
-          borderRadius: "999px",
+          padding: 0,
+          border: 0,
+          borderRadius: "8px",
           background: open ? "var(--dsw-alias-bg-base, rgba(128,128,128,0.12))" : "transparent",
           color: "inherit",
           cursor: "pointer",
-          font: "inherit",
-          whiteSpace: "nowrap",
         },
+      }, h("svg", {
+        "aria-hidden": true,
+        viewBox: "0 0 24 24",
+        width: 22,
+        height: 22,
+        fill: "none",
+        style: { display: "block", opacity: 0.72 },
       }, [
-        h("span", { key: "icon", "aria-hidden": true, style: { fontSize: "15px", lineHeight: 1 } }, "▣"),
-        h("span", { key: "label" }, "浏览器"),
-      ]);
+        h("rect", {
+          key: "frame",
+          x: 3.25,
+          y: 3.25,
+          width: 17.5,
+          height: 17.5,
+          rx: 4,
+          stroke: "currentColor",
+          strokeWidth: 1.7,
+        }),
+        h("path", {
+          key: "divider",
+          d: "M9 4.25v15.5",
+          stroke: "currentColor",
+          strokeWidth: 1.7,
+          strokeLinecap: "round",
+        }),
+      ]));
     }
 
     function apply(ctx) {

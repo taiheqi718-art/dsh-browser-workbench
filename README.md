@@ -37,7 +37,7 @@ This is an adapter, not another browser engine and not a replacement MCP client.
 1. Ask the DSH agent to open, inspect or test a page.
 2. The official MCP client starts the pinned Playwright MCP lazily.
 3. The browser page appears in DSH's right details column after the first browser action.
-4. Fold the panel when you want more room, then reopen the same live view from the session header's **Browser** button at any time.
+4. Fold the panel when you want more room, then reopen the same live view from the session header's side-panel icon at any time.
 
 The latest frame is a visual status surface, not a video stream. The agent can still request ordinary Playwright screenshots when visual data must enter its context.
 

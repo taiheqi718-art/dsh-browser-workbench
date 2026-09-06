@@ -55,5 +55,8 @@ describe("DSH browser client", () => {
     expect(source).toContain("打开浏览器侧栏");
     expect(source).toContain("关闭浏览器侧栏");
     expect(source).toContain("updatePanelUi");
+    expect(source).toContain('viewBox: "0 0 24 24"');
+    expect(source).toContain('d: "M9 4.25v15.5"');
+    expect(source).not.toContain('key: "label" }, "浏览器"');
   });
 });
