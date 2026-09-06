@@ -8,3 +8,4 @@
 - Added a model-invisible live-frame cache and transient official-details overlay.
 - Added a Host-resolved MCP descriptor so Agent presets contain no machine paths or `npx` calls.
 - Added exact-origin request-policy support, unit tests and a real system-browser smoke test.
+- Pinned the Host compatibility declaration to DSH Alpha1 and made it host-supplied, preventing package managers from auto-installing a mixed Alpha2 MCP stack.

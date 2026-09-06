@@ -13,7 +13,7 @@ The package adds only the missing integration layer: Session-aware file fencing,
 
 ## Status
 
-`0.1.0-alpha.1` targets DSH `0.1.2-alpha.1` through `0.1.2-alpha.2`. It is tested on Windows. macOS launch, reload and multi-Session validation remain a release gate before the first stable version.
+`0.1.0-alpha.1` targets DSH `0.1.2-alpha.1`. It is tested on Windows. DSH Alpha2 and macOS launch, reload and multi-Session validation remain release gates; a later compatibility release will not silently mix Alpha1 and Alpha2 packages.
 
 ## Features
 
