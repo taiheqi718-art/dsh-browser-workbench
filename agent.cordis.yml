@@ -1,0 +1,20 @@
+# Add this row to every DSH Agent preset that should receive browser tools.
+# The root bundle resolves machine paths once and exposes them as a service;
+# this row remains an ordinary official @deepseek-ai/dsh-mcp-client instance.
+- id: dsh-browser-workbench-mcp
+  name: '@deepseek-ai/dsh-mcp-client'
+  inject: [dshBrowserWorkbench]
+  config:
+    serverName: !!js ctx.dshBrowserWorkbench.mcp.serverName
+    transport: !!js ctx.dshBrowserWorkbench.mcp.transport
+    command: !!js ctx.dshBrowserWorkbench.mcp.command
+    args: !!js ctx.dshBrowserWorkbench.mcp.args
+    env: !!js ctx.dshBrowserWorkbench.mcp.env
+    cwd: !!js ctx.dshBrowserWorkbench.mcp.cwd
+    toolCallTimeoutMs: !!js ctx.dshBrowserWorkbench.mcp.toolCallTimeoutMs
+    failOnStartupError: false
+    reconnect:
+      enabled: true
+      initialDelayMs: 500
+      maxDelayMs: 30000
+      maxAttempts: 10

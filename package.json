@@ -1,0 +1,77 @@
+{
+  "name": "@taiheqi718-art/dsh-browser-workbench",
+  "version": "0.1.0-alpha.1",
+  "description": "Codex-style, Session-safe browser tools and side panel for DeepSeek Harness.",
+  "type": "module",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./client": "./client.js",
+    "./agent.cordis.yml": "./agent.cordis.yml",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "client.js",
+    "agent.cordis.yml",
+    "cordis.patch.yml",
+    "scripts",
+    "README.md",
+    "SECURITY.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-primitives"
+      ],
+      "platform": "web",
+      "immediately": true
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "install:direct": "pwsh -NoLogo -NoProfile -File scripts/install-direct.ps1",
+    "doctor": "node scripts/doctor.mjs",
+    "pack:check": "node scripts/pack-dry-run.mjs",
+    "check:generated": "git diff --exit-code -- lib",
+    "verify:browser": "node scripts/verify-browser.mjs",
+    "test": "vitest run",
+    "check": "npm run build && npm run check:generated && npm test && npm run pack:check"
+  },
+  "dependencies": {
+    "@playwright/mcp": "0.0.79"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-mcp-client": ">=0.1.2-alpha.1 <0.1.2-alpha.3"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@types/node": "^24.10.1",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taiheqi718-art/dsh-browser-workbench.git"
+  },
+  "keywords": ["deepseek", "dsh", "browser", "playwright", "mcp", "agent"],
+  "license": "MIT"
+}

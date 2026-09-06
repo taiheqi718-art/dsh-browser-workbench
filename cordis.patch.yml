@@ -1,0 +1,11 @@
+- insert:
+    - id: dsh-browser-workbench
+      name: '@taiheqi718-art/dsh-browser-workbench'
+      config:
+        enabled: true
+        runtimeRoot: !!js process.env.DSH_BROWSER_WORKBENCH_RUNTIME
+        browserExecutable: !!js process.env.DSH_BROWSER_EXECUTABLE
+        liveCapture: true
+        maxSessions: 12
+        maxFrameBytes: 8388608
+        maxStagedInputBytes: 67108864
