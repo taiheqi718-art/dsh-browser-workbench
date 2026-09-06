@@ -9,6 +9,7 @@ describe("publish contract", () => {
     expect(manifest.name).toBe("@taiheqi718-art/dsh-browser-workbench");
     expect(manifest.dsh.bundle.patch).toBe("./cordis.patch.yml");
     expect(manifest.dsh.client.platform).toBe("web");
+    expect(manifest.dsh.client.inject).toContain("@deepseek-ai/dsh-client-ui-renderer");
     expect(patch).toContain("DSH_BROWSER_WORKBENCH_RUNTIME");
     expect(patch).toContain("enabled: true");
     expect(agent).toContain("@deepseek-ai/dsh-mcp-client");

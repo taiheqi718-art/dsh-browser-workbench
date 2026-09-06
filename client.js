@@ -6,6 +6,7 @@ window.__ModuleLoader__.load({
     const { StateDot } = require("@deepseek-ai/dsh-client-ui-primitives");
     const h = react.createElement;
     const ROUTE = "/dsh-browser-workbench/live";
+    let layout = null;
 
     async function readFrame(sessionId, afterRevision, signal) {
       const response = await fetch(ROUTE, {
@@ -83,9 +84,9 @@ window.__ModuleLoader__.load({
         && state.status !== "idle";
 
       react.useEffect(() => {
-        if (visible) ctx.layout.openDetails();
+        if (visible) layout?.openDetails();
         else if (sessionId !== null && state.sessionId === sessionId && state.status === "idle" && state.activity > 0) {
-          ctx.layout.closeDetails();
+          layout?.closeDetails();
         }
       }, [sessionId, state.activity, state.sessionId, state.status, visible]);
 
@@ -109,7 +110,7 @@ window.__ModuleLoader__.load({
         if (sessionId === null) return;
         dismissed.current.set(sessionId, state.activity);
         refreshDismissal((value) => value + 1);
-        if (!keepDetails) ctx.layout.closeDetails();
+        if (!keepDetails) layout?.closeDetails();
       };
 
       if (!visible) return null;
@@ -226,6 +227,7 @@ window.__ModuleLoader__.load({
     }
 
     function apply(ctx) {
+      layout = ctx.layout;
       ctx.slots.inject("shell.overlay", () => ctx.slots.register({
         name: "shell.overlay",
         id: "dsh-browser-workbench-panel",

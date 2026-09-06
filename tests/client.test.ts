@@ -25,7 +25,12 @@ describe("DSH browser client", () => {
     expect(plugin?.inject).toEqual(["layout", "sessions", "slots"]);
 
     const registered = new Map<string, { id: string; component: (props: unknown) => unknown }>();
+    const layout = {
+      openDetails: () => undefined,
+      closeDetails: () => undefined,
+    };
     plugin?.apply({
+      layout,
       slots: {
         inject(_name: string, callback: () => void) { callback(); },
         register(definition: { name: string; id: string }, component: (props: unknown) => unknown) {
@@ -40,7 +45,9 @@ describe("DSH browser client", () => {
     expect(registered.has("conversation.view")).toBe(false);
     expect(source).toContain("waitMs: 25000");
     expect(source).not.toContain("setInterval(");
-    expect(source).toContain("ctx.layout.openDetails()");
+    expect(source).toContain("layout = ctx.layout");
+    expect(source).toContain("layout?.openDetails()");
+    expect(source).not.toContain("ctx.layout.openDetails()");
     expect(source).toContain("工具详情");
   });
 });
