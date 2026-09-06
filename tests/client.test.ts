@@ -58,9 +58,14 @@ describe("DSH browser client", () => {
     expect(source).toContain('viewBox: "0 0 24 24"');
     expect(source).toContain('d: "M9 4.25v15.5"');
     expect(source).not.toContain('key: "label" }, "浏览器"');
-    expect(source).toContain('"min(880px, max(520px, 48vw), calc(100vw - 300px))"');
+    expect(source).toContain('FRAME_LAYOUT_ATTR = "data-dsh-browser-workbench-layout"');
+    expect(source).toContain('panel.current.closest("[data-shell-overlay]")');
+    expect(source).toContain("grid-template-columns:");
+    expect(source).toContain("frameWidth - sidebarWidth - CENTER_FLOOR");
+    expect(source).toContain('left: fullscreen ? `var(${FRAME_SIDEBAR_VAR}, 280px)` : "auto"');
     expect(source).toContain('fullscreen ? "退出全屏" : "全屏浏览器"');
     expect(source).toContain('event.key === "Escape"');
-    expect(source).not.toContain("ResizeObserver");
+    expect(source).toContain("new ResizeObserver(syncLayout)");
+    expect(source).toContain("new MutationObserver(syncLayout)");
   });
 });

@@ -38,7 +38,7 @@ This is an adapter, not another browser engine and not a replacement MCP client.
 2. The official MCP client starts the pinned Playwright MCP lazily.
 3. The browser page appears in DSH's right details column after the first browser action.
 4. Fold the panel when you want more room, then reopen the same live view from the session header's side-panel icon at any time.
-5. Use the panel's expand control for a full-workbench browser view; press `Esc` to return to the wide side panel.
+5. Use the panel's expand control to fill the conversation workspace while keeping the project/session sidebar visible; press `Esc` to return to the wide side panel.
 
 The latest frame is a visual status surface, not a video stream. The agent can still request ordinary Playwright screenshots when visual data must enter its context.
 
@@ -112,7 +112,7 @@ Built Host artifacts are committed with the source. DSH can install the plugin d
 - A local HTML file is previewed through a random, loopback-only URL; unrestricted browser file access stays disabled.
 - Successful page actions refresh a bounded in-memory frame for the UI. This automatic frame is not sent to the model and adds no image tokens.
 - Codex-style panel lifecycle: first browser activity opens DSH's existing details column; closing only folds it, the session header can reopen the last live frame, and the next model browser action focuses it again.
-- A wide responsive side-panel view is the default; an in-panel control expands it to the full workbench and `Esc` exits fullscreen.
+- A wide responsive details track is the default, so the conversation reflows instead of being covered; an in-panel control fills the conversation workspace while preserving the left project/session sidebar, and `Esc` exits fullscreen.
 - Optional exact-origin request policy for a Host that needs per-Session network leases.
 
 ## Security boundaries

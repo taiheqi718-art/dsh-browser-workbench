@@ -11,6 +11,19 @@ window.__ModuleLoader__.load({
     const TOGGLE_SLOT = "conversation.session.header.utilities";
     const TOGGLE_ID = "dsh-browser-workbench-toggle";
     const MAX_REMEMBERED_SESSIONS = 32;
+    const FRAME_LAYOUT_ATTR = "data-dsh-browser-workbench-layout";
+    const FRAME_SIDEBAR_VAR = "--dsh-browser-workbench-sidebar";
+    const FRAME_DETAILS_VAR = "--dsh-browser-workbench-details";
+    const PANEL_MIN = 520;
+    const PANEL_MAX = 880;
+    const PANEL_SHARE = 0.48;
+    const CENTER_FLOOR = 360;
+    const PUSHED_LAYOUT_CSS = `
+      [${FRAME_LAYOUT_ATTR}] {
+        grid-template-columns:
+          var(${FRAME_SIDEBAR_VAR}) minmax(0, 1fr) var(${FRAME_DETAILS_VAR}) !important;
+      }
+    `;
     const EMPTY_PANEL_UI = Object.freeze({
       activity: 0,
       dismissedActivity: 0,
@@ -82,6 +95,7 @@ window.__ModuleLoader__.load({
       const [frame, setFrame] = react.useState(null);
       const [routeError, setRouteError] = react.useState(null);
       const [fullscreen, setFullscreen] = react.useState(false);
+      const panel = react.useRef(null);
       const panelUi = usePanelUi(sessionId);
 
       react.useEffect(() => {
@@ -151,6 +165,48 @@ window.__ModuleLoader__.load({
         if (!visible && fullscreen) setFullscreen(false);
       }, [fullscreen, visible]);
 
+      react.useEffect(() => {
+        if (!visible || panel.current === null) return undefined;
+        const overlay = panel.current.closest("[data-shell-overlay]");
+        const appFrame = overlay?.parentElement;
+        if (!(appFrame instanceof HTMLElement) || overlay === null) {
+          return undefined;
+        }
+        const syncLayout = () => {
+          const frameWidth = appFrame.getBoundingClientRect().width;
+          const inlineTracks = appFrame.style.gridTemplateColumns;
+          const sidebarMatch = /^\s*([\d.]+)px/.exec(inlineTracks);
+          const sidebarWidth = Math.max(0, Number(sidebarMatch?.[1] ?? 280));
+          const roomForPanel = Math.max(300, frameWidth - sidebarWidth - CENTER_FLOOR);
+          const preferred = Math.max(PANEL_MIN, frameWidth * PANEL_SHARE);
+          const detailsWidth = Math.round(Math.min(PANEL_MAX, preferred, roomForPanel));
+          const sidebarValue = `${Math.round(sidebarWidth)}px`;
+          const detailsValue = `${detailsWidth}px`;
+          if (appFrame.style.getPropertyValue(FRAME_SIDEBAR_VAR) !== sidebarValue) {
+            appFrame.style.setProperty(FRAME_SIDEBAR_VAR, sidebarValue);
+          }
+          if (appFrame.style.getPropertyValue(FRAME_DETAILS_VAR) !== detailsValue) {
+            appFrame.style.setProperty(FRAME_DETAILS_VAR, detailsValue);
+          }
+          if (!appFrame.hasAttribute(FRAME_LAYOUT_ATTR)) appFrame.setAttribute(FRAME_LAYOUT_ATTR, "");
+        };
+        syncLayout();
+        const resize = typeof ResizeObserver === "function" ? new ResizeObserver(syncLayout) : null;
+        resize?.observe(appFrame);
+        const mutation = typeof MutationObserver === "function" ? new MutationObserver(syncLayout) : null;
+        mutation?.observe(appFrame, {
+          attributes: true,
+          attributeFilter: ["style", "data-sidebar-collapsed"],
+        });
+        return () => {
+          resize?.disconnect();
+          mutation?.disconnect();
+          appFrame.removeAttribute(FRAME_LAYOUT_ATTR);
+          appFrame.style.removeProperty(FRAME_SIDEBAR_VAR);
+          appFrame.style.removeProperty(FRAME_DETAILS_VAR);
+        };
+      }, [visible]);
+
       const dismiss = (keepDetails) => {
         if (sessionId === null) return;
         setFullscreen(false);
@@ -170,15 +226,17 @@ window.__ModuleLoader__.load({
               : "等待首次浏览器操作";
 
       return h("div", {
+        ref: panel,
+        "data-dsh-browser-workbench-panel": true,
         style: {
-          position: fullscreen ? "fixed" : "absolute",
+          position: "absolute",
           top: 0,
           right: 0,
           bottom: 0,
-          left: fullscreen ? 0 : "auto",
+          left: fullscreen ? `var(${FRAME_SIDEBAR_VAR}, 280px)` : "auto",
           width: fullscreen
-            ? "100vw"
-            : "min(880px, max(520px, 48vw), calc(100vw - 300px))",
+            ? "auto"
+            : `var(${FRAME_DETAILS_VAR}, ${PANEL_MIN}px)`,
           minWidth: 0,
           zIndex: fullscreen ? 1000 : "auto",
           display: "grid",
@@ -188,6 +246,7 @@ window.__ModuleLoader__.load({
           boxShadow: fullscreen ? "none" : "-10px 0 28px rgba(0,0,0,0.12)",
         },
       }, [
+        h("style", { key: "pushed-layout" }, PUSHED_LAYOUT_CSS),
         h("div", {
           key: "bar",
           style: {
