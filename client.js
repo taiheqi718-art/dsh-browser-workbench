@@ -81,8 +81,7 @@ window.__ModuleLoader__.load({
       });
       const [frame, setFrame] = react.useState(null);
       const [routeError, setRouteError] = react.useState(null);
-      const [panelWidth, setPanelWidth] = react.useState(360);
-      const panel = react.useRef(null);
+      const [fullscreen, setFullscreen] = react.useState(false);
       const panelUi = usePanelUi(sessionId);
 
       react.useEffect(() => {
@@ -140,23 +139,21 @@ window.__ModuleLoader__.load({
       }, [sessionId, state.activity, state.sessionId, state.status, visible]);
 
       react.useEffect(() => {
-        if (!visible || panel.current === null) return undefined;
-        const overlay = panel.current.parentElement;
-        const details = overlay?.previousElementSibling;
-        if (!(details instanceof HTMLElement)) return undefined;
-        const update = () => {
-          const width = Math.round(details.getBoundingClientRect().width);
-          if (width > 0) setPanelWidth(width);
+        if (!fullscreen) return undefined;
+        const exitOnEscape = (event) => {
+          if (event.key === "Escape") setFullscreen(false);
         };
-        update();
-        if (typeof ResizeObserver !== "function") return undefined;
-        const observer = new ResizeObserver(update);
-        observer.observe(details);
-        return () => observer.disconnect();
-      }, [visible]);
+        window.addEventListener("keydown", exitOnEscape);
+        return () => window.removeEventListener("keydown", exitOnEscape);
+      }, [fullscreen]);
+
+      react.useEffect(() => {
+        if (!visible && fullscreen) setFullscreen(false);
+      }, [fullscreen, visible]);
 
       const dismiss = (keepDetails) => {
         if (sessionId === null) return;
+        setFullscreen(false);
         updatePanelUi(sessionId, { dismissedActivity: state.activity, manualOpen: false });
         if (!keepDetails) layout?.closeDetails();
       };
@@ -173,19 +170,22 @@ window.__ModuleLoader__.load({
               : "等待首次浏览器操作";
 
       return h("div", {
-        ref: panel,
         style: {
-          position: "absolute",
+          position: fullscreen ? "fixed" : "absolute",
           top: 0,
           right: 0,
           bottom: 0,
-          width: `${panelWidth}px`,
+          left: fullscreen ? 0 : "auto",
+          width: fullscreen
+            ? "100vw"
+            : "min(880px, max(520px, 48vw), calc(100vw - 300px))",
           minWidth: 0,
+          zIndex: fullscreen ? 1000 : "auto",
           display: "grid",
           gridTemplateRows: "auto minmax(0, 1fr)",
-          borderLeft: "1px solid var(--dsw-alias-border-l2, rgba(128,128,128,0.25))",
+          borderLeft: fullscreen ? 0 : "1px solid var(--dsw-alias-border-l2, rgba(128,128,128,0.25))",
           background: "var(--dsw-alias-bg-base, #111)",
-          boxShadow: "-10px 0 28px rgba(0,0,0,0.12)",
+          boxShadow: fullscreen ? "none" : "-10px 0 28px rgba(0,0,0,0.12)",
         },
       }, [
         h("div", {
@@ -216,6 +216,41 @@ window.__ModuleLoader__.load({
               fontFamily: "var(--font-mono, monospace)",
             },
           }, state.url ?? ""),
+          h("button", {
+            key: "fullscreen",
+            type: "button",
+            title: fullscreen ? "退出全屏" : "全屏浏览器",
+            "aria-label": fullscreen ? "退出全屏" : "全屏浏览器",
+            "aria-pressed": fullscreen,
+            onClick: () => setFullscreen((value) => !value),
+            style: {
+              display: "grid",
+              placeItems: "center",
+              width: "28px",
+              height: "28px",
+              padding: 0,
+              border: 0,
+              borderRadius: "6px",
+              background: "transparent",
+              color: "inherit",
+              opacity: 0.72,
+              cursor: "pointer",
+            },
+          }, h("svg", {
+            "aria-hidden": true,
+            viewBox: "0 0 24 24",
+            width: 18,
+            height: 18,
+            fill: "none",
+          }, h("path", {
+            d: fullscreen
+              ? "M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"
+              : "M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5",
+            stroke: "currentColor",
+            strokeWidth: 1.8,
+            strokeLinecap: "round",
+            strokeLinejoin: "round",
+          }))),
           h("button", {
             key: "details",
             type: "button",
