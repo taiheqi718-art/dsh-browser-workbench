@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="540" viewBox="0 0 1200 540" role="img" aria-labelledby="title desc">
+  <title id="title">DSH Browser Workbench flow</title>
+  <desc id="desc">A DeepSeek Harness conversation invokes the official Playwright MCP, and a live browser frame appears in the native right-side details track.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#080b16"/>
+      <stop offset="0.55" stop-color="#11172a"/>
+      <stop offset="1" stop-color="#171332"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7c3aed"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="1200" height="540" rx="28" fill="url(#bg)"/>
+  <circle cx="1040" cy="70" r="170" fill="#7c3aed" opacity="0.10"/>
+  <circle cx="130" cy="500" r="210" fill="#22d3ee" opacity="0.07"/>
+  <text x="64" y="72" fill="#f8fafc" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="30" font-weight="700">Browser work where the agent work already lives</text>
+  <text x="64" y="106" fill="#94a3b8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17">Official DSH MCP transport · Official Playwright MCP · Native details track</text>
+  <rect x="62" y="145" width="1076" height="324" rx="22" fill="#0d1222" stroke="#29314a" stroke-width="2"/>
+  <rect x="62" y="145" width="1076" height="46" rx="22" fill="#151b2e"/>
+  <rect x="62" y="172" width="1076" height="19" fill="#151b2e"/>
+  <circle cx="91" cy="168" r="6" fill="#fb7185"/>
+  <circle cx="112" cy="168" r="6" fill="#fbbf24"/>
+  <circle cx="133" cy="168" r="6" fill="#34d399"/>
+  <text x="164" y="174" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="14" font-weight="600">DeepSeek Harness</text>
+  <rect x="84" y="213" width="494" height="228" rx="16" fill="#111827" stroke="#26324b"/>
+  <text x="108" y="246" fill="#e2e8f0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="15" font-weight="700">CONVERSATION</text>
+  <rect x="108" y="270" width="360" height="58" rx="14" fill="#27203f"/>
+  <text x="128" y="294" fill="#ddd6fe" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="14">Open the local app and verify the chart.</text>
+  <text x="128" y="315" fill="#a78bfa" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12">Agent calls mcp__browser__browser_navigate</text>
+  <rect x="108" y="347" width="410" height="68" rx="14" fill="#132335"/>
+  <circle cx="132" cy="371" r="7" fill="#22d3ee" filter="url(#glow)"/>
+  <text x="151" y="376" fill="#cffafe" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="14" font-weight="600">Browser activity detected</text>
+  <text x="128" y="398" fill="#94a3b8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12">The existing right-side details track opens.</text>
+  <path d="M594 325 H641" stroke="url(#accent)" stroke-width="4" stroke-linecap="round"/>
+  <path d="M632 316 L644 325 L632 334" fill="none" stroke="#22d3ee" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="660" y="213" width="454" height="228" rx="16" fill="#f8fafc"/>
+  <rect x="660" y="213" width="454" height="38" rx="16" fill="#e2e8f0"/>
+  <rect x="660" y="235" width="454" height="16" fill="#e2e8f0"/>
+  <circle cx="684" cy="232" r="5" fill="#94a3b8"/>
+  <text x="701" y="237" fill="#475569" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" font-weight="600">Browser · latest live frame</text>
+  <rect x="686" y="275" width="164" height="134" rx="12" fill="#ede9fe"/>
+  <path d="M708 375 C730 330 752 350 772 303 C795 260 818 320 832 289" fill="none" stroke="#7c3aed" stroke-width="5" stroke-linecap="round"/>
+  <line x1="705" y1="387" x2="833" y2="387" stroke="#a5b4fc" stroke-width="2"/>
+  <line x1="722" y1="292" x2="722" y2="393" stroke="#a5b4fc" stroke-width="2"/>
+  <rect x="874" y="275" width="213" height="20" rx="6" fill="#cbd5e1"/>
+  <rect x="874" y="309" width="164" height="12" rx="6" fill="#e2e8f0"/>
+  <rect x="874" y="333" width="190" height="12" rx="6" fill="#e2e8f0"/>
+  <rect x="874" y="368" width="102" height="31" rx="9" fill="url(#accent)"/>
+  <text x="891" y="389" fill="#ffffff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" font-weight="700">INTERACT</text>
+  <rect x="290" y="486" width="620" height="31" rx="15" fill="#121a2d" stroke="#2e3a59"/>
+  <text x="600" y="507" text-anchor="middle" fill="#a5b4fc" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="13" font-weight="600">Automatic frame: local UI only · zero added image tokens</text>
+</svg>

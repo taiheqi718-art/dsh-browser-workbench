@@ -80,6 +80,22 @@
     "type": "git",
     "url": "git+https://github.com/taiheqi718-art/dsh-browser-workbench.git"
   },
-  "keywords": ["deepseek", "dsh", "browser", "playwright", "mcp", "agent"],
+  "homepage": "https://github.com/taiheqi718-art/dsh-browser-workbench#readme",
+  "bugs": {
+    "url": "https://github.com/taiheqi718-art/dsh-browser-workbench/issues"
+  },
+  "keywords": [
+    "deepseek",
+    "deepseek-harness",
+    "dsh",
+    "browser-workbench",
+    "agentic-browser",
+    "playwright",
+    "playwright-mcp",
+    "mcp",
+    "codex-style",
+    "local-ai",
+    "agent"
+  ],
   "license": "MIT"
 }

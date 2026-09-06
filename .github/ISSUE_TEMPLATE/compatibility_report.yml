@@ -1,0 +1,45 @@
+name: Compatibility report
+description: Share a successful or failed run on another platform or DSH version
+title: "[Compatibility]: "
+labels:
+  - compatibility
+body:
+  - type: input
+    id: dsh-version
+    attributes:
+      label: DSH version
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Operating system, architecture, Node.js version, browser and browser version.
+    validations:
+      required: true
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Outcome
+      options:
+        - Passed end to end
+        - Partially passed
+        - Failed before browser launch
+        - Failed after browser launch
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: What worked?
+      options:
+        - label: Browser tools registered
+        - label: System browser launched
+        - label: Session-local HTML preview opened
+        - label: Right-side panel appeared only after browser activity
+        - label: Screenshot output stayed inside the Session workspace
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes and redacted logs
+      description: Do not include credentials, private paths or browser data.

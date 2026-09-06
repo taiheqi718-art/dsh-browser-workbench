@@ -1,0 +1,64 @@
+name: Bug report
+description: Report a reproducible Browser Workbench failure
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a problem. Do not include credentials, private browser data or project files.
+  - type: input
+    id: dsh-version
+    attributes:
+      label: DSH version
+      placeholder: 0.1.2-alpha.1
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Operating system, Node.js version, browser and browser version.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Failure area
+      options:
+        - Tool registration
+        - Browser launch
+        - Session-local preview
+        - File input or output
+        - Right-side panel
+        - Request policy
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: Give the smallest sequence that reproduces the issue.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Redacted doctor output
+      description: Paste `npm run doctor` output after removing private paths or credentials.
+      render: shell
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed credentials, browser data and private project content.
+          required: true
