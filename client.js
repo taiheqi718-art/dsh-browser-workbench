@@ -6,7 +6,51 @@ window.__ModuleLoader__.load({
     const { StateDot } = require("@deepseek-ai/dsh-client-ui-primitives");
     const h = react.createElement;
     const ROUTE = "/dsh-browser-workbench/live";
+    const PANEL_SLOT = "shell.overlay";
+    const PANEL_ID = "dsh-browser-workbench-panel";
+    const TOGGLE_SLOT = "conversation.session.header.utilities";
+    const TOGGLE_ID = "dsh-browser-workbench-toggle";
+    const MAX_REMEMBERED_SESSIONS = 32;
+    const EMPTY_PANEL_UI = Object.freeze({
+      activity: 0,
+      dismissedActivity: 0,
+      manualOpen: false,
+      available: false,
+    });
     let layout = null;
+    const panelUiBySession = new Map();
+    const panelUiListeners = new Set();
+
+    function readPanelUi(sessionId) {
+      return typeof sessionId === "string"
+        ? panelUiBySession.get(sessionId) ?? EMPTY_PANEL_UI
+        : EMPTY_PANEL_UI;
+    }
+
+    function updatePanelUi(sessionId, patch) {
+      if (typeof sessionId !== "string") return;
+      const previous = readPanelUi(sessionId);
+      const next = { ...previous, ...patch };
+      if (Object.keys(next).every((key) => next[key] === previous[key])) return;
+      panelUiBySession.delete(sessionId);
+      panelUiBySession.set(sessionId, next);
+      while (panelUiBySession.size > MAX_REMEMBERED_SESSIONS) {
+        panelUiBySession.delete(panelUiBySession.keys().next().value);
+      }
+      for (const listener of panelUiListeners) listener(sessionId);
+    }
+
+    function usePanelUi(sessionId) {
+      const [, refresh] = react.useState(0);
+      react.useEffect(() => {
+        const listener = (changedSessionId) => {
+          if (changedSessionId === sessionId) refresh((value) => value + 1);
+        };
+        panelUiListeners.add(listener);
+        return () => panelUiListeners.delete(listener);
+      }, [sessionId]);
+      return readPanelUi(sessionId);
+    }
 
     async function readFrame(sessionId, afterRevision, signal) {
       const response = await fetch(ROUTE, {
@@ -37,10 +81,9 @@ window.__ModuleLoader__.load({
       });
       const [frame, setFrame] = react.useState(null);
       const [routeError, setRouteError] = react.useState(null);
-      const [, refreshDismissal] = react.useState(0);
       const [panelWidth, setPanelWidth] = react.useState(360);
-      const dismissed = react.useRef(new Map());
       const panel = react.useRef(null);
+      const panelUi = usePanelUi(sessionId);
 
       react.useEffect(() => {
         const abort = new AbortController();
@@ -63,7 +106,13 @@ window.__ModuleLoader__.load({
               afterRevision = Number.isSafeInteger(next.revision) ? next.revision : afterRevision;
               if (typeof next.imageBase64 === "string" && typeof next.mimeType === "string") {
                 setFrame(`data:${next.mimeType};base64,${next.imageBase64}`);
+              } else if (next.status === "idle") {
+                setFrame(null);
               }
+              const activity = Number.isSafeInteger(next.activity) ? next.activity : 0;
+              updatePanelUi(sessionId, next.status === "idle"
+                ? { activity, available: false, manualOpen: false, dismissedActivity: activity }
+                : { activity, available: activity > 0 });
               setState({ ...next, sessionId });
               setRouteError(null);
             } catch (error) {
@@ -77,11 +126,11 @@ window.__ModuleLoader__.load({
         return () => abort.abort();
       }, [sessionId]);
 
-      const dismissedActivity = sessionId === null ? 0 : dismissed.current.get(sessionId) ?? 0;
       const visible = sessionId !== null
         && state.sessionId === sessionId
-        && state.activity > dismissedActivity
-        && state.status !== "idle";
+        && state.status !== "idle"
+        && panelUi.available
+        && (panelUi.manualOpen || state.activity > panelUi.dismissedActivity);
 
       react.useEffect(() => {
         if (visible) layout?.openDetails();
@@ -108,8 +157,7 @@ window.__ModuleLoader__.load({
 
       const dismiss = (keepDetails) => {
         if (sessionId === null) return;
-        dismissed.current.set(sessionId, state.activity);
-        refreshDismissal((value) => value + 1);
+        updatePanelUi(sessionId, { dismissedActivity: state.activity, manualOpen: false });
         if (!keepDetails) layout?.closeDetails();
       };
 
@@ -226,13 +274,60 @@ window.__ModuleLoader__.load({
       ]);
     }
 
+    function BrowserPanelToggle({ sessionId }) {
+      const panelUi = usePanelUi(sessionId);
+      if (!panelUi.available) return null;
+      const open = panelUi.manualOpen || panelUi.activity > panelUi.dismissedActivity;
+      const toggle = () => {
+        if (open) {
+          updatePanelUi(sessionId, {
+            dismissedActivity: panelUi.activity,
+            manualOpen: false,
+          });
+          layout?.closeDetails();
+        } else {
+          updatePanelUi(sessionId, { manualOpen: true });
+          layout?.openDetails();
+        }
+      };
+      return h("button", {
+        type: "button",
+        title: open ? "关闭浏览器侧栏" : "打开浏览器侧栏",
+        "aria-label": open ? "关闭浏览器侧栏" : "打开浏览器侧栏",
+        "aria-pressed": open,
+        onClick: toggle,
+        style: {
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "6px",
+          height: "34px",
+          padding: "0 11px",
+          border: "1px solid var(--dsw-alias-border-l2, rgba(128,128,128,0.25))",
+          borderRadius: "999px",
+          background: open ? "var(--dsw-alias-bg-base, rgba(128,128,128,0.12))" : "transparent",
+          color: "inherit",
+          cursor: "pointer",
+          font: "inherit",
+          whiteSpace: "nowrap",
+        },
+      }, [
+        h("span", { key: "icon", "aria-hidden": true, style: { fontSize: "15px", lineHeight: 1 } }, "▣"),
+        h("span", { key: "label" }, "浏览器"),
+      ]);
+    }
+
     function apply(ctx) {
       layout = ctx.layout;
-      ctx.slots.inject("shell.overlay", () => ctx.slots.register({
-        name: "shell.overlay",
-        id: "dsh-browser-workbench-panel",
+      ctx.slots.inject(PANEL_SLOT, () => ctx.slots.register({
+        name: PANEL_SLOT,
+        id: PANEL_ID,
         order: 20,
       }, BrowserSidePanel));
+      ctx.slots.inject(TOGGLE_SLOT, () => ctx.slots.register({
+        name: TOGGLE_SLOT,
+        id: TOGGLE_ID,
+        order: 30,
+      }, BrowserPanelToggle));
     }
 
     return { inject: ["layout", "sessions", "slots"], apply };

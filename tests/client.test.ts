@@ -3,7 +3,7 @@ import vm from "node:vm";
 import { describe, expect, it } from "vitest";
 
 describe("DSH browser client", () => {
-  it("registers only a transient official-details overlay", () => {
+  it("registers a reopenable browser panel on DSH's official details track", () => {
     const source = readFileSync(new URL("../client.js", import.meta.url), "utf8");
     let registration: { id: string; factory: (load: (name: string) => unknown) => { inject: string[]; apply(ctx: unknown): void } } | undefined;
     vm.runInNewContext(source, {
@@ -42,6 +42,9 @@ describe("DSH browser client", () => {
     const overlay = registered.get("shell.overlay");
     expect(overlay?.id).toBe("dsh-browser-workbench-panel");
     expect(overlay?.component({ useSessions: (pick: (state: unknown) => unknown) => pick({ current: undefined, byId: {} }) })).toBeNull();
+    const toggle = registered.get("conversation.session.header.utilities");
+    expect(toggle?.id).toBe("dsh-browser-workbench-toggle");
+    expect(toggle?.component({ sessionId: "session-without-browser" })).toBeNull();
     expect(registered.has("conversation.view")).toBe(false);
     expect(source).toContain("waitMs: 25000");
     expect(source).not.toContain("setInterval(");
@@ -49,5 +52,8 @@ describe("DSH browser client", () => {
     expect(source).toContain("layout?.openDetails()");
     expect(source).not.toContain("ctx.layout.openDetails()");
     expect(source).toContain("工具详情");
+    expect(source).toContain("打开浏览器侧栏");
+    expect(source).toContain("关闭浏览器侧栏");
+    expect(source).toContain("updatePanelUi");
   });
 });

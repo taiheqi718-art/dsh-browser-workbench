@@ -37,7 +37,7 @@ This is an adapter, not another browser engine and not a replacement MCP client.
 1. Ask the DSH agent to open, inspect or test a page.
 2. The official MCP client starts the pinned Playwright MCP lazily.
 3. The browser page appears in DSH's right details column after the first browser action.
-4. Close the panel when you are done; it stays closed until the next agent browser action.
+4. Fold the panel when you want more room, then reopen the same live view from the session header's **Browser** button at any time.
 
 The latest frame is a visual status surface, not a video stream. The agent can still request ordinary Playwright screenshots when visual data must enter its context.
 
@@ -48,7 +48,7 @@ The latest frame is a visual status surface, not a video stream. The agent can s
 | Browser automation | Microsoft `@playwright/mcp` |
 | MCP discovery, stdio transport and reconnect | DeepSeek Harness `@deepseek-ai/dsh-mcp-client` |
 | Session workspace authority | DSH `sandboxPolicy` |
-| Right-side UI surface | DSH `shell.overlay` and the official details track |
+| Right-side UI surface | DSH `shell.overlay`, `conversation.session.header.utilities`, and the official details track |
 | File fencing, local preview and model-invisible live frame | DSH Browser Workbench |
 
 ~~~text
@@ -110,7 +110,7 @@ Built Host artifacts are committed with the source. DSH can install the plugin d
 - Uploads and storage-state inputs must come from the current Session workspace and are size-bounded.
 - A local HTML file is previewed through a random, loopback-only URL; unrestricted browser file access stays disabled.
 - Successful page actions refresh a bounded in-memory frame for the UI. This automatic frame is not sent to the model and adds no image tokens.
-- No permanent browser tab: first browser activity opens DSH's existing details column; closing it keeps it closed until the next model browser action.
+- Codex-style panel lifecycle: first browser activity opens DSH's existing details column; closing only folds it, the session header can reopen the last live frame, and the next model browser action focuses it again.
 - Optional exact-origin request policy for a Host that needs per-Session network leases.
 
 ## Security boundaries
@@ -154,7 +154,7 @@ npm test
 npm pack --dry-run
 ~~~
 
-Tests cover Session fencing, staged I/O cleanup, local preview, hidden live capture, request policies, controller disposal, runtime resolution, bundle isolation and transient Client registration.
+Tests cover Session fencing, staged I/O cleanup, local preview, hidden live capture, request policies, controller disposal, runtime resolution, bundle isolation, the Client overlay, and its per-session reopen control.
 
 With an official DSH Alpha1 source checkout already built:
 

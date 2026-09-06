@@ -2,6 +2,7 @@
 
 ## 0.1.0-alpha.1
 
+- Added a persistent per-session **Browser** header control so the official DSH details sidebar can be folded and reopened without waiting for another agent action. A real agent `browser_close` still clears the frame and entry.
 - Extracted the Session-aware browser adapter from the private workbench.
 - Kept DSH's official MCP client and Microsoft's Playwright MCP as the transport and browser owners.
 - Added symlink-aware Session input/output fencing and tokenized local preview.
