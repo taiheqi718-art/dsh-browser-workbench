@@ -110,6 +110,7 @@ Built Host artifacts are committed with the source. DSH can install the plugin d
 - Screenshot, PDF, console, network and storage-state outputs are staged and copied through a symlink-aware workspace fence.
 - Uploads and storage-state inputs must come from the current Session workspace and are size-bounded.
 - A local HTML file is previewed through a random, loopback-only URL; unrestricted browser file access stays disabled.
+- The panel address field translates that private preview URL back to a safe `workspace/...` path; ordinary pages show their real final URL.
 - Successful page actions refresh a bounded in-memory frame for the UI. This automatic frame is not sent to the model and adds no image tokens.
 - Codex-style panel lifecycle: first browser activity opens DSH's existing details column; closing only folds it, the session header can reopen the last live frame, and the next model browser action focuses it again.
 - A wide responsive details track is the default, so the conversation reflows instead of being covered; an in-panel control fills the conversation workspace while preserving the left project/session sidebar, and `Esc` exits fullscreen.

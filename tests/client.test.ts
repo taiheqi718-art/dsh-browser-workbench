@@ -52,6 +52,8 @@ describe("DSH browser client", () => {
     expect(source).toContain("layout?.openDetails()");
     expect(source).not.toContain("ctx.layout.openDetails()");
     expect(source).toContain("工具详情");
+    expect(source).toContain('"aria-label": "当前页面地址"');
+    expect(source).toContain('state.url ?? "等待页面地址"');
     expect(source).toContain("打开浏览器侧栏");
     expect(source).toContain("关闭浏览器侧栏");
     expect(source).toContain("updatePanelUi");

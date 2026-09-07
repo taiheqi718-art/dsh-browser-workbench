@@ -172,6 +172,7 @@ describe("session-aware browser workbench", () => {
     }, b.exec);
     expect(seenUrl).toMatch(/^http:\/\/127\.0\.0\.1:\d+\/[a-f0-9]{32}\/index\.html$/);
     expect(seenUrl).not.toContain("file:");
+    expect(b.controller.snapshot("session-1").url).toBe("workspace/index.html");
     b.controller.dispose();
   });
 

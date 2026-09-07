@@ -7,6 +7,8 @@
  */
 export interface WorkspacePreviewBridge {
     urlForFile(workspace: string, absoluteFile: string): Promise<string>;
+    /** Convert one private preview URL into a user-facing workspace path. */
+    displayAddress(url: string): string | undefined;
     dispose(): void;
 }
 /** Create the bridge lazily: no socket exists until a local file is opened. */

@@ -34,6 +34,8 @@ const MIME_TYPES: Readonly<Record<string, string>> = {
 
 export interface WorkspacePreviewBridge {
   urlForFile(workspace: string, absoluteFile: string): Promise<string>;
+  /** Convert one private preview URL into a user-facing workspace path. */
+  displayAddress(url: string): string | undefined;
   dispose(): void;
 }
 
@@ -132,6 +134,25 @@ export function createWorkspacePreviewBridge(
       const relative = path.relative(root, checked.resolved);
       const encoded = relative.split(path.sep).map(encodeURIComponent).join("/");
       return `http://127.0.0.1:${port}/${token}/${encoded}`;
+    },
+    displayAddress(url: string): string | undefined {
+      if (port === undefined) return undefined;
+      try {
+        const parsed = new URL(url);
+        if (parsed.protocol !== "http:" || parsed.hostname !== "127.0.0.1" || parsed.port !== String(port)) {
+          return undefined;
+        }
+        const encoded = parsed.pathname.split("/").filter(Boolean);
+        const token = encoded.shift();
+        if (token === undefined || !roots.has(token) || encoded.length === 0) return undefined;
+        const segments = encoded.map(part => decodeURIComponent(part));
+        if (segments.some(part => part === "" || part === "." || part === ".." || part.includes("\\") || part.includes("/"))) {
+          return undefined;
+        }
+        return `workspace/${segments.join("/")}${parsed.search}${parsed.hash}`;
+      } catch {
+        return undefined;
+      }
     },
     dispose(): void {
       disposed = true;

@@ -695,7 +695,10 @@ export function serveBrowserWorkbench(
           }
 
           if (sessionId !== undefined) {
-            const url = pageUrlOf(value);
+            const pageUrl = pageUrlOf(value);
+            const url = pageUrl === undefined
+              ? undefined
+              : workspacePreview.displayAddress(pageUrl) ?? pageUrl;
             const directImage = definition.name === SCREENSHOT_TOOL ? imageOf(value) : undefined;
             if (directImage !== undefined && directImage.bytes.byteLength <= maxFrameBytes) {
               touch(sessionId, {

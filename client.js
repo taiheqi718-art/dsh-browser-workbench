@@ -261,8 +261,9 @@ window.__ModuleLoader__.load({
           h(StateDot, { key: "dot", state: routeError !== null || state.status === "error" ? "error" : state.status === "ready" ? "done" : "warning" }),
           h("span", { key: "title", style: { fontSize: "14px", fontWeight: 600, whiteSpace: "nowrap" } }, "浏览器"),
           h("span", { key: "status", style: { fontSize: "12px", whiteSpace: "nowrap" } }, statusText),
-          h("span", {
-            key: "url",
+          h("div", {
+            key: "address",
+            "aria-label": "当前页面地址",
             title: state.url ?? "",
             style: {
               flex: "1 1 auto",
@@ -270,11 +271,18 @@ window.__ModuleLoader__.load({
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
-              opacity: 0.65,
+              height: "28px",
+              padding: "0 9px",
+              display: "flex",
+              alignItems: "center",
+              border: "1px solid var(--dsw-alias-border-l2, rgba(128,128,128,0.22))",
+              borderRadius: "7px",
+              background: "var(--dsw-alias-bg-subtle, rgba(128,128,128,0.08))",
+              opacity: 0.78,
               fontSize: "12px",
               fontFamily: "var(--font-mono, monospace)",
             },
-          }, state.url ?? ""),
+          }, state.url ?? "等待页面地址"),
           h("button", {
             key: "fullscreen",
             type: "button",
