@@ -19,8 +19,6 @@
 
 > **Developer preview.** `0.1.0-alpha.1` is verified against DSH `0.1.2-alpha.1` on Windows. macOS and newer DSH releases are explicit compatibility gates, not implied support.
 
-**中文简介：** 给 DeepSeek Harness 补上一套 Codex 风格的浏览器体验。模型仍使用官方 Playwright MCP 和官方 DSH MCP 客户端；只有真正调用浏览器后，页面才出现在 DSH 原生右侧详情栏。自动刷新帧只供本地 UI 展示，不会塞进模型上下文，也不会平白增加图片 token。
-
 ## Why this package exists
 
 DSH can already consume MCP tools, and Playwright MCP already knows how to automate a browser. The missing piece is the workbench experience around them:
